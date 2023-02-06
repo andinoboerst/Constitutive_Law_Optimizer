@@ -1,10 +1,14 @@
-import pandas as pd
+#import pandas as pd
 import numpy as np
 import pickle
 import my_scripts.simulation as sim
+import chaospy as cp
+
+NUM_EXTENSIONS = 10
 
 class MyData:
-    def __init__(self, restarted) -> None:
+    def __init__(self, params, restarted=False) -> None:
+        self.params = params
         if restarted:
             self.load_restart()
         else:
@@ -15,17 +19,31 @@ class MyData:
             data = pickle.load(f)
         self.H = data["H"]
         self.X = data["X"]
+        self.params = data["params"]
 
     def save_data(self):
-        data = {"H": self.H, "X": self.X}
+        data = {"H": self.H, "X": self.X, "params": self.params}
         with open('save_restart/my_data.pickle', 'wb') as f:
             pickle.dump(data, f)
 
     def initialize_data(self):
-        self.define_H(60)
-        self.X = sim.run_sims(self.H) # ouput parameters (In this case the material parameters to be varied)
+        self.X = np.array([]) # input parameters to the ML model (In this case the y coordinates of my measurement points)
+        self.define_X(60)
+        self.H = sim.run_sims(self.X) # ouput parameters of the ML model (In this case the material parameters to be varied)
         self.save_data()
 
-    def define_H(self, num_points=10):
-        self.H = np.array([[1, 2, 3], [4, 5, 6]]) # input parameters (In this case the y coordinates of my measurement points)
-        print(self.H)
+    def define_X(self, num_points=NUM_EXTENSIONS):
+        dists = np.empty(len(self.params), dtype=object)
+        for i, param in enumerate(self.params):
+            dists[i] = cp.Uniform(param["lower"], param["upper"])
+        join_dist=cp.J(*dists)
+        new_X = join_dist.sample(num_points, rule='halton').T
+        if np.size(self.X)==0:
+            self.X = new_X
+        else:
+            self.X = np.concatenate((self.X, new_X[self.X.shape[0]:]))
+
+
+    def extend_data(self):
+        self.define_X()
+        self.H = np.concatenate((self.H, sim.run_sims(self.X[-NUM_EXTENSIONS:])))
