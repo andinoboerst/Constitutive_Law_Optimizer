@@ -11,6 +11,5 @@ def run_sims(H, X=np.array([])):
 
 def launch_simulation(x):
     path = f"{os.getcwd()}/my_files"
-    print(path)
-    subprocess.run(["/home/andinoboerst/anaconda3/envs/kratos_env/bin/python", f"{path}/MainKratos.py"], cwd=path)
-    input("press smth")
+    #subprocess.run(["/home/andinoboerst/anaconda3/envs/kratos_env/bin/python", f"{path}/MainKratos.py"], cwd=path)
+    return np.array([1, 2, 3])
