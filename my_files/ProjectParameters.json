@@ -22,7 +22,7 @@
             "input_filename" : "falling_sand_ball_Body"
         },
         "material_import_settings"        : {
-            "materials_filename" : "ParticleMaterials.json"
+            "materials_filename" : "ParticleMaterials_new.json"
         },
         "convergence_criterion"           : "residual_criterion",
         "displacement_relative_tolerance" : 0.0001,
