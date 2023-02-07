@@ -24,12 +24,14 @@ def launch_simulation(x, params):
         json.dump(json_data, f, indent=4, separators=(',', ': '))
 
     # Run the simulation with the given parameters
-    #subprocess.run(["/home/andinoboerst/anaconda3/envs/kratos_env/bin/python", f"{path}/MainKratos.py"], cwd=path)
+    status = subprocess.run(["/home/andinoboerst/anaconda3/envs/kratos_env/bin/python", f"{PATH}/MainKratos.py"], cwd=PATH)
+    if status.returncode != 0:
+        raise Exception("Simulation could not be run.")
     os.remove(f"{PATH}/ParticleMaterials_new.json")
 
     # Extract the h from the simulation results
     h = np.array([1, 2, 3])
 
-    #os.remove(f"{path}/falling_sand_ball_results.json")
+    os.remove(f"{PATH}/falling_sand_ball_results.json")
 
     return h
