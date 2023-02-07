@@ -11,9 +11,9 @@ NUM_START = 60
 NUM_EXTENSIONS = 10
 
 class MyData:
-    def __init__(self, params, restarted=False) -> None:
+    def __init__(self, params, restart=False) -> None:
         self.params = params
-        if restarted:
+        if restart:
             self.load_restart()
         else:
             self.initialize_data()
@@ -28,7 +28,7 @@ class MyData:
         self.X = data["X"]
         self.params = data["params"]
 
-    def save_data(self):
+    def save_restart(self):
         data = {"H": self.H, "X": self.X, "params": self.params}
         with open('save_restart/my_data.pickle', 'wb') as f:
             pickle.dump(data, f)
@@ -37,7 +37,7 @@ class MyData:
         self.X = np.array([]) # input parameters to the ML model (In this case the y coordinates of my measurement points)
         self.define_X(NUM_START)
         self.H = sim.run_sims(self.X, self.params) # ouput parameters of the ML model (In this case the material parameters to be varied)
-        self.save_data()
+        self.save_restart()
 
     def define_X(self, num_points=NUM_EXTENSIONS):
         dists = np.empty(len(self.params), dtype=object)
@@ -54,3 +54,4 @@ class MyData:
     def extend_data(self):
         self.define_X()
         self.H = np.concatenate((self.H, sim.run_sims(self.X[-NUM_EXTENSIONS:], self.params)))
+        self.save_restart()
