@@ -21,8 +21,6 @@ def launch_simulation(x):
     with open(f"{path}/ParticleMaterials_new.json", 'w') as f:
         json.dump(json_data, f, indent=4, separators=(',', ': '))
 
-    input("do smth")
-
     # Run the simulation with the given parameters
     subprocess.run(["/home/andinoboerst/anaconda3/envs/kratos_env/bin/python", f"{path}/MainKratos.py"], cwd=path)
     os.remove(f"{path}/ParticleMaterials_new.json")
