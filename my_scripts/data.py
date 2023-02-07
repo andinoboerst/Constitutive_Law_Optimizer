@@ -1,9 +1,13 @@
+"""
+Author: Andino Boerst
+"""
 #import pandas as pd
 import numpy as np
 import pickle
 import my_scripts.simulation as sim
 import chaospy as cp
 
+NUM_START = 60
 NUM_EXTENSIONS = 10
 
 class MyData:
@@ -13,6 +17,9 @@ class MyData:
             self.load_restart()
         else:
             self.initialize_data()
+
+    def __str__(self) -> str:
+        return f"parameters: {self.params},\nH: {self.H},\nX: {self.X}"
 
     def load_restart(self):
         with open('save_restart/my_data.pickle', 'rb') as f:
@@ -28,7 +35,7 @@ class MyData:
 
     def initialize_data(self):
         self.X = np.array([]) # input parameters to the ML model (In this case the y coordinates of my measurement points)
-        self.define_X(60)
+        self.define_X(NUM_START)
         self.H = sim.run_sims(self.X, self.params) # ouput parameters of the ML model (In this case the material parameters to be varied)
         self.save_data()
 
