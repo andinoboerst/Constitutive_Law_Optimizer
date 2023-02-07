@@ -3,20 +3,19 @@ import os
 import subprocess
 import json
 
-def run_sims(X):
-    return np.apply_along_axis(launch_simulation, axis=1, arr=X)
+def run_sims(X, params):
+    return np.apply_along_axis(launch_simulation, axis=1, arr=X, params=params)
     
 
-def launch_simulation(x):
+def launch_simulation(x, params):
     path = f"{os.getcwd()}/my_files"
 
     # Here need to modify the ParticleMaterials.json file according to entries in x
     with open(f"{path}/ParticleMaterials.json", 'r') as f:
         json_data = json.load(f)
 
-    json_data["properties"][0]["Material"]["Variables"]["DENSITY"] = x[0]
-    json_data["properties"][0]["Material"]["Variables"]["YOUNG_MODULUS"] = x[1]
-    json_data["properties"][0]["Material"]["Variables"]["POISSON_RATIO"] = x[2]
+    for i, entry in enumerate(x):
+        json_data["properties"][0]["Material"]["Variables"][params[i]["name"]] = entry
 
     with open(f"{path}/ParticleMaterials_new.json", 'w') as f:
         json.dump(json_data, f, indent=4, separators=(',', ': '))

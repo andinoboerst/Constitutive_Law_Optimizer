@@ -13,7 +13,7 @@ def main():
               {"id": "p3", "name": "POISSON_RATIO", "lower": 0.28, "upper": 0.32}]
     # Step 1: Generate the data
     data = dt.MyData( params, restarted)
-    # Step 2: 
+    # Step 2: Train the ML model
 
 if __name__=="__main__":
     main()

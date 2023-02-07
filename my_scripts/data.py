@@ -29,7 +29,7 @@ class MyData:
     def initialize_data(self):
         self.X = np.array([]) # input parameters to the ML model (In this case the y coordinates of my measurement points)
         self.define_X(60)
-        self.H = sim.run_sims(self.X) # ouput parameters of the ML model (In this case the material parameters to be varied)
+        self.H = sim.run_sims(self.X, self.params) # ouput parameters of the ML model (In this case the material parameters to be varied)
         self.save_data()
 
     def define_X(self, num_points=NUM_EXTENSIONS):
@@ -46,4 +46,4 @@ class MyData:
 
     def extend_data(self):
         self.define_X()
-        self.H = np.concatenate((self.H, sim.run_sims(self.X[-NUM_EXTENSIONS:])))
+        self.H = np.concatenate((self.H, sim.run_sims(self.X[-NUM_EXTENSIONS:], self.params)))
