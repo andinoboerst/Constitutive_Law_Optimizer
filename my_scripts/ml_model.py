@@ -3,17 +3,23 @@ Author: Andino Boerst
 """
 import numpy as np
 import pickle
+import warnings
 from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
 
-MODEL_OPTIONS = {"linear regression": LinearRegression}
+MODEL_OPTIONS = {"linear regression": LinearRegression, "knn regressor": KNeighborsRegressor}
 
 class ML_model:
-    def __init__(self, data, restart=False, model_name="linear regression") -> None:
+    def __init__(self, data, model_name="linear regression", restart=False) -> None:
         self.data = data
         if restart:
             self.load_restart()
         else:
-            self.model_name = model_name
+            if model_name not in MODEL_OPTIONS:
+                self.model_name = "linear regression"
+                warnings.warn("Model name not an option, using default linear regression model.")
+            else:
+                self.model_name = model_name
             self.model = MODEL_OPTIONS[self.model_name]
             self.train()
 

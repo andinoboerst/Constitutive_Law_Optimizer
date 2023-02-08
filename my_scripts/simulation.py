@@ -29,7 +29,7 @@ def run_sims(X, params):
         os.remove(f"{PATH}/ParticleMaterials_new.json")
 
         # Extract the h from the simulation results
-        res.append(np.array([1, 2, 3]))
+        res.append(np.array([1, index, 3]))
 
         os.remove(f"{PATH}/falling_sand_ball_results.json")
 

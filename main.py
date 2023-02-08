@@ -14,8 +14,8 @@ def main():
     data = dt.MyData( params, restarted)
     #print(data)
     # Step 2: Train the ML model
-    model = ml.ML_model(data)
-    print(model.predict([[1, 2, 4], [1, 2, 3]]))
+    model = ml.ML_model(data, "knn regressor")
+    print(model.predict([[1, 2, 3], [1, 8, 3]]))
 
 if __name__=="__main__":
     main()
