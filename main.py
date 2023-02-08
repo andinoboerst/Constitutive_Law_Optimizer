@@ -15,6 +15,7 @@ def main():
     #print(data)
     # Step 2: Train the ML model
     model = ml.ML_model(data, "knn regressor")
+    #Step 3: Predict the new parameter combinations
     print(model.predict([[1, 2, 3], [1, 8, 3]]))
 
 if __name__=="__main__":
