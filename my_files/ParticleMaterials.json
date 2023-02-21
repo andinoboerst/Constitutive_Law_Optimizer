@@ -1,6 +1,6 @@
 {
     "properties" : [{
-        "model_part_name" : "Initial_MPM_Material.Parts_Solid_Sand",
+        "model_part_name" : "Initial_MPM_Material.Parts_Material_domain_GranularMaterial",
         "properties_id"   : 1,
         "Material"        : {
             "constitutive_law" : {
@@ -8,34 +8,15 @@
             },
             "Variables"        : {
                 "THICKNESS"                : 1.0,
-                "PARTICLES_PER_ELEMENT"    : 6,
-                "DENSITY"                  : 2300.0,
-                "YOUNG_MODULUS"            : 6000000.0,
+                "PARTICLES_PER_ELEMENT"    : 3,
+                "DENSITY"                  : 2650.0,
+                "YOUNG_MODULUS"            : 840000.0,
                 "POISSON_RATIO"            : 0.3,
                 "COHESION"                 : 0.0,
-                "INTERNAL_FRICTION_ANGLE"  : 0.5235987755982,
+                "INTERNAL_FRICTION_ANGLE"  : 0.345575191894812,
                 "INTERNAL_DILATANCY_ANGLE" : 0.0
             },
             "Tables"           : {}
-        }
-    },{
-        "model_part_name" : "Background_Grid.Parts_Grid_Grid",
-        "properties_id"   : 2,
-        "Material"        : {
-            "Variables" : {
-                "DENSITY"                     : 7850.0,
-                "YOUNG_MODULUS"               : 206900000000.0,
-                "POISSON_RATIO"               : 0.29,
-                "C10"                         : 40096900000.0,
-                "BULK_MODULUS"                : 164206349206.0,
-                "YIELD_STRESS"                : 450000000.0,
-                "KINEMATIC_HARDENING_MODULUS" : 129240000.0,
-                "REFERENCE_HARDENING_MODULUS" : 450000000.0,
-                "INFINITY_HARDENING_MODULUS"  : 715000000.0,
-                "HARDENING_EXPONENT"          : 16.93,
-                "THICKNESS"                   : 1.0
-            },
-            "Tables"    : {}
         }
     }]
 }
