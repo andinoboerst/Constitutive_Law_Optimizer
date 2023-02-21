@@ -21,7 +21,7 @@ def run_sims(X, params):
     with open(f"{PATH}/ProjectParameters.json", 'r') as f:
         end_time = json.load(f)["problem_data"]["end_time"]
 
-    p = re.compile('TIME:  (\d+.\d+)')
+    p = re.compile('TIME:  (\d+.\d+|\d+e-\d+)')
 
     res = []
     for index, row in enumerate(X):
