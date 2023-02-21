@@ -10,6 +10,7 @@ from vtk.util import numpy_support
 import re
 import shutil
 import sys
+import asyncio
 
 TOLERANCE = 0.001
 TO_CHECK = (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4)
@@ -37,16 +38,17 @@ def run_sims(X, params):
 
         # Run the simulation with the given parameters
         print(f"Running simulation {index+1}/{len(X)}")
-        process = subprocess.Popen(f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=subprocess.PIPE, text=True)
-        for line in iter(process.stdout.readline,''):
+        process = subprocess.Popen(f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python -u {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=asyncio.subprocess.PIPE, text=True)
+        for line in iter(process.stdout.readline, ''):
             if "TIME" in line:
                 curr_time = float(p.search(line.rstrip()).group(1))
-                sys.stdout.write(f"\r[{'='*int(50*curr_time):<50}] {curr_time/end_time:.0%}")
+                sys.stdout.write(f"\r[{'='*int(100*curr_time):<100}] {curr_time/end_time:.0%}")
                 sys.stdout.flush()
         status = process.wait()
         print("\n")
         if status != 0:
             raise Exception("Simulation could not be run.")
+
         os.remove(f"{PATH}/ParticleMaterials_new.json")
 
         # Extract the h from the simulation results
