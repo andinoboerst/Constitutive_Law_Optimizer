@@ -1,6 +1,6 @@
 {
     "problem_data"     : {
-        "problem_name"  : "granular_flow_experiment_V1",
+        "problem_name"  : "granular_flow_experiment",
         "parallel_type" : "OpenMP",
         "echo_level"    : 0,
         "start_time"    : 0.0,
@@ -19,7 +19,7 @@
         "scheme_type"                     : "newmark",
         "model_import_settings"           : {
             "input_type"     : "mdpa",
-            "input_filename" : "granular_flow_experiment_V1_Body",
+            "input_filename" : "granular_flow_experiment_Body",
             "serializer_trace"             : "no_trace",
             "restart_load_file_label" : "7500"
         },
@@ -34,7 +34,7 @@
         "max_iteration"                   : 10,
         "grid_model_import_settings"      : {
             "input_type"     : "mdpa",
-            "input_filename" : "granular_flow_experiment_V1_Grid"
+            "input_filename" : "granular_flow_experiment_Grid"
         },
         "pressure_dofs"                   : false,
         "linear_solver_settings"          : {
