@@ -55,3 +55,22 @@ class MyData:
         self.define_X()
         self.H = np.concatenate((self.H, sim.run_sims(self.X[-NUM_EXTENSIONS:], self.params)))
         self.save_restart()
+
+    def add_predefined_entries(self, H, X):
+        self.add_predefined_H(H)
+        self.add_predefined_X(X)
+
+    def add_predefined_H(self, H):
+        if np.size(self.H)==0:
+            self.H = H
+        else:
+            self.H = np.concatenate((self.H, H))
+        self.save_restart()
+
+    def add_predefined_X(self, X):
+        if np.size(self.X)==0:
+            self.X = X
+        else:
+            self.X = np.concatenate((self.X, X))
+        self.save_restart()
+

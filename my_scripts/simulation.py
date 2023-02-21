@@ -5,8 +5,15 @@ import numpy as np
 import os
 import subprocess
 import json
+import vtk
+from vtk.util import numpy_support
+import re
+import shutil
 
-PATH = f"{os.getcwd()}/my_files"
+TOLERANCE = 0.001
+TO_CHECK = (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4)
+
+PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/my_files"
 
 def run_sims(X, params):
     res = []
@@ -29,8 +36,41 @@ def run_sims(X, params):
         os.remove(f"{PATH}/ParticleMaterials_new.json")
 
         # Extract the h from the simulation results
-        res.append(np.array([1, index, 3]))
+        res.append(extract_results())
 
-        os.remove(f"{PATH}/falling_sand_ball_results.json")
+        shutil.rmtree(f"{PATH}/vtk_output")
 
     return np.array(res)
+
+def extract_results():
+    results_folder = PATH + "/vtk_output"
+    files = os.listdir(results_folder)
+    p = re.compile('^MPM_Material(\d+).*\.vtu$')
+    mat_files = [p.search(f) for f in files]
+    step_ind = [int(r.group(1)) for r in mat_files if r]
+    file_name = f"{PATH}/vtk_output/MPM_Material{max(step_ind)}.vtu"
+
+    reader = vtk.vtkXMLUnstructuredGridReader()
+    reader.SetFileName(file_name)
+    reader.Update()
+    output = reader.GetOutput()
+    point_coordinates = numpy_support.vtk_to_numpy(output.GetPoints().GetData())
+    split_coordinates = np.hsplit(point_coordinates, np.array([1,2]))
+    x_coord = split_coordinates[0].T[0]
+    y_coord = split_coordinates[1].T[0]
+    
+    # measure max y coord at different points of x: {0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4} -> with a tolerance of 0.001
+    # the sandbox starts with a box from (0,0) to (0.2, 0.1) and the grid is a box from (0,0) to (0.55,0.15)
+    y_max = []
+    for point in TO_CHECK:
+        indices = (x_coord > (point-TOLERANCE)) & (x_coord < (point+TOLERANCE))
+        if np.any(indices):
+            y_max.append(np.max(y_coord[indices]))
+        else:
+            y_max.append(0)
+
+    return y_max
+
+
+if __name__=="__main__":
+    print(extract_results())
