@@ -9,6 +9,7 @@ import vtk
 from vtk.util import numpy_support
 import re
 import shutil
+import sys
 
 TOLERANCE = 0.001
 TO_CHECK = (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4)
@@ -16,6 +17,12 @@ TO_CHECK = (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4)
 PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/my_files"
 
 def run_sims(X, params):
+
+    with open(f"{PATH}/ProjectParameters.json", 'r') as f:
+        end_time = json.load(f)["problem_data"]["end_time"]
+
+    p = re.compile('TIME:  (\d+.\d+)')
+
     res = []
     for index, row in enumerate(X):
         # Here need to modify the ParticleMaterials.json file according to entries in x
@@ -30,8 +37,15 @@ def run_sims(X, params):
 
         # Run the simulation with the given parameters
         print(f"Running simulation {index+1}/{len(X)}")
-        status = subprocess.run(["/home/andinoboerst/anaconda3/envs/kratos_env/bin/python", f"{PATH}/MainKratos.py"], cwd=PATH, stdout=subprocess.DEVNULL)
-        if status.returncode != 0:
+        process = subprocess.Popen(f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=subprocess.PIPE, text=True)
+        for line in iter(process.stdout.readline,''):
+            if "TIME" in line:
+                curr_time = float(p.search(line.rstrip()).group(1))
+                sys.stdout.write(f"\r[{'='*int(50*curr_time):<50}] {curr_time/end_time:.0%}")
+                sys.stdout.flush()
+        status = process.wait()
+        print("\n")
+        if status != 0:
             raise Exception("Simulation could not be run.")
         os.remove(f"{PATH}/ParticleMaterials_new.json")
 
