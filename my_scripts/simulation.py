@@ -37,7 +37,7 @@ def run_sims(X, params):
 
         # Run the simulation with the given parameters
         print(f"Running simulation {index+1}/{len(X)}")
-        process = subprocess.Popen(f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=subprocess.PIPE, text=True)
+        process = subprocess.Popen([f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python {PATH}/MainKratos.py"], shell=True, cwd=PATH, stdout=subprocess.PIPE, text=True)
         for line in iter(process.stdout.readline,''):
             if "TIME" in line:
                 curr_time = float(p.search(line.rstrip()).group(1))
