@@ -38,13 +38,10 @@ def continue_sims() -> ml.ML_model:
     return model
 
 def main():
-    #model = start_new()
+    model = start_new()
     #model = add_more(5)
-    model = continue_sims()
+    #model = continue_sims()
     #model = load_model()
-
-    print(model.data.X)
-    print(model.data.H)
 
     #Step 3: Predict the new parameter combinations
     print(model.predict([[0.08, 0.067, 0.06, 0.043, 0.037, 0.02, 0.008]]))
