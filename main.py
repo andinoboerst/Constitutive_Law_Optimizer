@@ -5,8 +5,8 @@ import my_scripts.data as dt
 import my_scripts.ml_model as ml
 
 PARAMS = [{"id": 1, "name": "DENSITY", "lower": 2200, "upper": 2400},
-              {"id": 2, "name": "YOUNG_MODULUS", "lower": 5500000, "upper": 6500000},
-              {"id": 3, "name": "POISSON_RATIO", "lower": 0.28, "upper": 0.32}]
+          {"id": 2, "name": "YOUNG_MODULUS", "lower": 5500000, "upper": 6500000},
+          {"id": 3, "name": "POISSON_RATIO", "lower": 0.28, "upper": 0.32}]
 
 def start_new() -> ml.ML_model:
     restarted = False
@@ -33,7 +33,7 @@ def main():
     model = start_new()
 
     #Step 3: Predict the new parameter combinations
-    print(model.predict([[1, 2, 3], [1, 8, 3]]))
+    print(model.predict([[0.08, 0.067, 0.06, 0.043, 0.037, 0.02, 0.008]]))
 
 
 if __name__=="__main__":
