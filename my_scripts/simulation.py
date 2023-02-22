@@ -19,7 +19,7 @@ PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/my_files
 
 PROGRESS_BAR_LENGTH = 50
 
-def run_sims(X, params):
+def run_sims(X, params) -> np.array:
 
     with open(f"{PATH}/ProjectParameters.json", 'r') as f:
         end_time = json.load(f)["problem_data"]["end_time"]
@@ -60,11 +60,16 @@ def run_sims(X, params):
         # Extract the h from the simulation results
         res.append(extract_results())
 
+        with open(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json", 'w') as f:
+            json_dict = {"results": res}
+            json.dump(json_dict, f, indent=4)
+
         shutil.rmtree(f"{PATH}/vtk_output")
 
+    os.remove(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json")
     return np.array(res)
 
-def extract_results():
+def extract_results() -> list[float]:
     results_folder = PATH + "/vtk_output"
     files = os.listdir(results_folder)
     p = re.compile('^MPM_Material(\d+).*\.vtu$')

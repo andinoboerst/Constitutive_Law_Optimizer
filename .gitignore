@@ -2,6 +2,7 @@
 my_files/*
 __pycache__
 *.pickle
+save_restart/
 !my_files/MainKratos.py
 !my_files/ParticleMaterials.json
 !my_files/ProjectParameters.json

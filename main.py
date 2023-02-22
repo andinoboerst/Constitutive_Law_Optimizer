@@ -9,9 +9,8 @@ PARAMS = [{"id": 1, "name": "DENSITY", "lower": 2200, "upper": 2400},
           {"id": 3, "name": "POISSON_RATIO", "lower": 0.28, "upper": 0.32}]
 
 def start_new() -> ml.ML_model:
-    restarted = False
     # Step 1: Generate the data
-    data = dt.MyData( PARAMS, restarted)
+    data = dt.MyData( PARAMS)
     #print(data)
     # Step 2: Train the ML model
     model = ml.ML_model(data, "knn regressor")
@@ -19,18 +18,33 @@ def start_new() -> ml.ML_model:
     
 
 def add_more(n_samples: int) -> ml.ML_model:
-    data = dt.MyData(PARAMS, restart=True)
+    data = dt.MyData(restart=True)
     data.extend_data(n_samples)
 
-    model = ml.ML_model(data, restart=False)
+    model = ml.ML_model(data, "knn regressor", restart=False)
     return model
 
 def load_model() -> ml.ML_model:
-    data = dt.MyData(PARAMS, restart=True)
-    return ml.ML_model(data, restart=True)
+    return ml.ML_model(restart=True)
+
+def load_data() -> dt.MyData:
+    return dt.MyData(restart=True)
+
+def continue_sims() -> ml.ML_model:
+    data = dt.MyData(restart=True)
+    data.continue_simulations()
+
+    model = ml.ML_model(data, "knn regressor", restart=False)
+    return model
 
 def main():
-    model = start_new()
+    #model = start_new()
+    #model = add_more(5)
+    model = continue_sims()
+    #model = load_model()
+
+    print(model.data.X)
+    print(model.data.H)
 
     #Step 3: Predict the new parameter combinations
     print(model.predict([[0.08, 0.067, 0.06, 0.043, 0.037, 0.02, 0.008]]))
