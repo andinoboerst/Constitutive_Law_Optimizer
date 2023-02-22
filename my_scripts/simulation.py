@@ -17,6 +17,8 @@ TO_CHECK = (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4)
 
 PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/my_files"
 
+PROGRESS_BAR_LENGTH = 50
+
 def run_sims(X, params):
 
     with open(f"{PATH}/ProjectParameters.json", 'r') as f:
@@ -43,7 +45,7 @@ def run_sims(X, params):
             if "TIME" in line:
                 curr_time = float(p.search(line.rstrip()).group(1))
                 completion_perc = curr_time/end_time
-                sys.stdout.write(f"\r[{'='*int(100*completion_perc):<100}] {completion_perc:.0%}")
+                sys.stdout.write(f"\r[{'='*int(PROGRESS_BAR_LENGTH*completion_perc):<{PROGRESS_BAR_LENGTH}}] {completion_perc:.0%}")
                 sys.stdout.flush()
         status = process.wait()
         print("\n")
