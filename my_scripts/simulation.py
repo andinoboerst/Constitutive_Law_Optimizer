@@ -15,16 +15,16 @@ import asyncio
 TOLERANCE = 0.001
 TO_CHECK = (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4)
 
-PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/my_files"
-
+LAUNCH_ON_SERVER = False
 PROGRESS_BAR_LENGTH = 50
+
+PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/my_files"
+P_REGEX = re.compile('TIME:  (\d+.\d+|\d+e[+-]\d+)')
 
 def run_sims(X, params) -> np.array:
 
     with open(f"{PATH}/ProjectParameters.json", 'r') as f:
         end_time = json.load(f)["problem_data"]["end_time"]
-
-    p = re.compile('TIME:  (\d+.\d+|\d+e[+-]\d+)')
 
     res = []
     for index, row in enumerate(X):
@@ -40,25 +40,12 @@ def run_sims(X, params) -> np.array:
 
         # Run the simulation with the given parameters
         print(f"Running simulation {index+1}/{len(X)}")
-        try:
-            process = subprocess.Popen(f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python -u {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=asyncio.subprocess.PIPE, text=True)
-            for line in iter(process.stdout.readline, ''):
-                if "TIME" in line:
-                    curr_time = float(p.search(line.rstrip()).group(1))
-                    completion_perc = curr_time/end_time
-                    sys.stdout.write(f"\r[{'='*int(PROGRESS_BAR_LENGTH*completion_perc):<{PROGRESS_BAR_LENGTH}}] {completion_perc:.0%}")
-                    sys.stdout.flush()
-            print("\n")
-            status = process.wait()
-        except subprocess.CalledProcessError as e:
-            print(e.output)
-        if status != 0:
-            raise Exception("Simulation could not be run.")
 
-        os.remove(f"{PATH}/ParticleMaterials_new.json")
-
-        # Extract the h from the simulation results
-        res.append(extract_results())
+        # launch the simulations and extract the results
+        if LAUNCH_ON_SERVER:
+            res.append(launch_sim_server())
+        else:
+            res.append(launch_sim_local(end_time))
 
         with open(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json", 'w') as f:
             json_dict = {"results": res}
@@ -69,7 +56,28 @@ def run_sims(X, params) -> np.array:
     os.remove(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json")
     return np.array(res)
 
-def extract_results() -> list[float]:
+
+def launch_sim_local(end_time):
+    try:
+        process = subprocess.Popen(f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python -u {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=asyncio.subprocess.PIPE, text=True)
+        for line in iter(process.stdout.readline, ''):
+            if "TIME" in line:
+                curr_time = float(P_REGEX.search(line.rstrip()).group(1))
+                completion_perc = curr_time/end_time
+                sys.stdout.write(f"\r[{'='*int(PROGRESS_BAR_LENGTH*completion_perc):<{PROGRESS_BAR_LENGTH}}] {completion_perc:.0%}")
+                sys.stdout.flush()
+        print("\n")
+        status = process.wait()
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+    if status != 0:
+        raise Exception("Simulation could not be run.")
+    
+    os.remove(f"{PATH}/ParticleMaterials_new.json")
+
+    return extract_results_local() # return the extracted results
+
+def extract_results_local() -> list[float]:
     results_folder = PATH + "/vtk_output"
     files = os.listdir(results_folder)
     p = re.compile('^MPM_Material(\d+).*\.vtu$')
@@ -99,5 +107,9 @@ def extract_results() -> list[float]:
     return y_max
 
 
+def launch_sim_server():
+    return []
+
+
 if __name__=="__main__":
-    print(extract_results())
+    print(extract_results_local())
