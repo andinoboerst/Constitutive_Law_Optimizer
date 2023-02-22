@@ -10,7 +10,7 @@ import os
 import json
 import warnings
 
-NUM_START = 5
+NUM_START = 60
 NUM_EXTENSIONS = 10
 
 PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/save_restart"
