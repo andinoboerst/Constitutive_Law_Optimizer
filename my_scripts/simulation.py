@@ -42,7 +42,8 @@ def run_sims(X, params):
         for line in iter(process.stdout.readline, ''):
             if "TIME" in line:
                 curr_time = float(p.search(line.rstrip()).group(1))
-                sys.stdout.write(f"\r[{'='*int(100*curr_time):<100}] {curr_time/end_time:.0%}")
+                completion_perc = curr_time/end_time
+                sys.stdout.write(f"\r[{'='*int(100*completion_perc):<100}] {completion_perc:.0%}")
                 sys.stdout.flush()
         status = process.wait()
         print("\n")
