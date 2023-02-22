@@ -40,15 +40,18 @@ def run_sims(X, params):
 
         # Run the simulation with the given parameters
         print(f"Running simulation {index+1}/{len(X)}")
-        process = subprocess.Popen(f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python -u {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=asyncio.subprocess.PIPE, text=True)
-        for line in iter(process.stdout.readline, ''):
-            if "TIME" in line:
-                curr_time = float(p.search(line.rstrip()).group(1))
-                completion_perc = curr_time/end_time
-                sys.stdout.write(f"\r[{'='*int(PROGRESS_BAR_LENGTH*completion_perc):<{PROGRESS_BAR_LENGTH}}] {completion_perc:.0%}")
-                sys.stdout.flush()
-        status = process.wait()
-        print("\n")
+        try:
+            process = subprocess.Popen(f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python -u {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=asyncio.subprocess.PIPE, text=True)
+            for line in iter(process.stdout.readline, ''):
+                if "TIME" in line:
+                    curr_time = float(p.search(line.rstrip()).group(1))
+                    completion_perc = curr_time/end_time
+                    sys.stdout.write(f"\r[{'='*int(PROGRESS_BAR_LENGTH*completion_perc):<{PROGRESS_BAR_LENGTH}}] {completion_perc:.0%}")
+                    sys.stdout.flush()
+            print("\n")
+            status = process.wait()
+        except subprocess.CalledProcessError as e:
+            print(e.output)
         if status != 0:
             raise Exception("Simulation could not be run.")
 
