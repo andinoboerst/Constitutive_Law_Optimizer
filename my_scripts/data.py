@@ -51,9 +51,9 @@ class MyData:
             self.X = np.concatenate((self.X, new_X[self.X.shape[0]:]))
 
 
-    def extend_data(self):
+    def extend_data(self, n_samples=NUM_EXTENSIONS):
         self.define_X()
-        self.H = np.concatenate((self.H, sim.run_sims(self.X[-NUM_EXTENSIONS:], self.params)))
+        self.H = np.concatenate((self.H, sim.run_sims(self.X[-n_samples:], self.params)))
         self.save_restart()
 
     def add_predefined_entries(self, H, X):
