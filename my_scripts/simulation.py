@@ -16,6 +16,7 @@ PROGRESS_BAR_LENGTH = 50
 
 PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/my_files"
 P_REGEX = re.compile('TIME:  (\d+.\d+|\d+e[+-]\d+)')
+PYTHON_PATH = "/home/andinoboerst/anaconda3/envs/kratos_env/bin/python"
 
 def run_sims(X, params) -> np.array:
 
@@ -57,7 +58,7 @@ def launch_sim_local(end_time):
     try:
         sim_bar = progressbar.ProgressBar(maxval=1.00001)
         sim_bar.start()
-        process = subprocess.Popen(f"/home/andinoboerst/anaconda3/envs/kratos_env/bin/python -u {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=asyncio.subprocess.PIPE, text=True)
+        process = subprocess.Popen(f"{PYTHON_PATH} -u {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=asyncio.subprocess.PIPE, text=True)
         for line in iter(process.stdout.readline, ''):
             if "TIME" in line:
                 curr_time = float(P_REGEX.search(line.rstrip()).group(1))
