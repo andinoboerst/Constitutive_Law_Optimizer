@@ -6,7 +6,7 @@ import os, sys, subprocess, shutil, asyncio
 import json, vtk
 from vtk.util import numpy_support
 import re
-import progressbar
+#import progressbar
 
 TOLERANCE = 0.001
 TO_CHECK = (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4)
@@ -56,18 +56,18 @@ def run_sims(X, params) -> np.array:
 
 def launch_sim_local(end_time):
     try:
-        sim_bar = progressbar.ProgressBar(maxval=1.00001)
-        sim_bar.start()
+        #sim_bar = progressbar.ProgressBar(maxval=1.00001)
+        #sim_bar.start()
         process = subprocess.Popen(f"{PYTHON_PATH} -u {PATH}/MainKratos.py", shell=True, cwd=PATH, stdout=asyncio.subprocess.PIPE, text=True)
         for line in iter(process.stdout.readline, ''):
             if "TIME" in line:
                 curr_time = float(P_REGEX.search(line.rstrip()).group(1))
-                # completion_perc = curr_time/end_time
-                # sys.stdout.write(f"\r[{'='*int(PROGRESS_BAR_LENGTH*completion_perc):<{PROGRESS_BAR_LENGTH}}] {completion_perc:.0%}")
-                # sys.stdout.flush()
-                sim_bar.update(curr_time/end_time)
+                completion_perc = curr_time/end_time
+                sys.stdout.write(f"\r[{'='*int(PROGRESS_BAR_LENGTH*completion_perc):<{PROGRESS_BAR_LENGTH}}] {completion_perc:.0%}")
+                sys.stdout.flush()
+                #sim_bar.update(curr_time/end_time)
         status = process.wait()
-        sim_bar.finish()
+        #sim_bar.finish()
     except subprocess.CalledProcessError as e:
         print(e.output)
     if status != 0:
