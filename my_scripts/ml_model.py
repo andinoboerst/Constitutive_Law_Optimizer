@@ -7,6 +7,7 @@ import warnings
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsRegressor
 import os
+import my_scripts.simulation as sm
 
 MODEL_OPTIONS = {"linear regression": LinearRegression, "knn regressor": KNeighborsRegressor}
 
@@ -55,3 +56,18 @@ class ML_model:
         for model in self.models:
             res.append(model.predict(h))
         return np.array(res).T
+    
+    def validate_model(self, to_predict: list[list[float]]) -> float:
+        '''
+        Predicts the parameters to be used for a certain result, which is then simulated and compared with the actual results
+        Returns the error of the model as an average of all the simulations that were compared
+        '''
+        to_predict = np.array(to_predict)
+
+        params_predicted = self.predict(to_predict)
+
+        results_predicted = sm.run_sims(params_predicted, self.data.params)
+
+        err = np.sqrt(((to_predict-results_predicted)**2).sum(axis=1)).sum()/len(results_predicted)
+
+        return err

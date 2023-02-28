@@ -40,20 +40,9 @@ def continue_sims() -> ml.ML_model:
     return model
 
 def validate_model(to_predict: list[list[float]]) -> float:
-    '''
-    Predicts the parameters to be used for a certain result, which is then simulated and compared with the actual results
-    Returns the accuracy of the model as an average of all the simulations that were compared
-    '''
-    to_predict = np.array(to_predict)
     model = load_model()
 
-    params_predicted = model.predict(to_predict)
-
-    results_predicted = sm.run_sims(params_predicted, model.data.params)
-
-    acc = np.sqrt(((to_predict-results_predicted)**2).sum(axis=1)).sum()/len(results_predicted)
-
-    return acc
+    return model.validate_model(to_predict)
 
 
 def main():
@@ -64,6 +53,8 @@ def main():
 
     #Step 3: Predict the new parameter combinations
     print(model.predict([[0.08, 0.067, 0.06, 0.043, 0.037, 0.02, 0.008]]))
+
+    #print(validate_model([[0.08, 0.067, 0.06, 0.043, 0.037, 0.02, 0.008]]))
 
 
 if __name__=="__main__":
