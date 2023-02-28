@@ -12,7 +12,7 @@ PARAMS = [{"id": 1, "name": "DENSITY", "lower": 2200, "upper": 2400},
 
 def start_new() -> ml.ML_model:
     # Step 1: Generate the data
-    data = dt.MyData( PARAMS)
+    data = dt.MyData(PARAMS)
     #print(data)
     # Step 2: Train the ML model
     model = ml.ML_model(data, "knn regressor")

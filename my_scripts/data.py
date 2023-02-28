@@ -86,7 +86,7 @@ class MyData:
             self.X = np.concatenate((self.X, X))
         self.save_restart()
 
-    def continue_simulations(self) -> None:
+    def add_current_sim_results(self) -> None:
         if os.path.isfile(f"{PATH}/current_sim_results.json"):
             with open(f"{PATH}/current_sim_results.json", 'r') as f:
                 existing_results = np.array(json.load(f)['results'])
@@ -98,6 +98,9 @@ class MyData:
             print(len(self.H))
             self.save_restart()
             os.remove(f"{PATH}/current_sim_results.json")
+
+    def continue_simulations(self) -> None:
+        self.add_current_sim_results()
 
         start_sims = len(self.X) - len(self.H)
         self.H = np.concatenate((self.H, sim.run_sims(self.X[-start_sims:], self.params)))
