@@ -15,7 +15,7 @@ LAUNCH_ON_SERVER = False
 PROGRESS_BAR_LENGTH = 50
 
 PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/my_files"
-P_REGEX = re.compile('TIME:  (\d+.\d+|\d+e[+-]\d+)')
+P_REGEX = re.compile('TIME:  (\d+.\d+|\d+e[+-]?\d+)')
 PYTHON_PATH = "/home/andinoboerst/anaconda3/envs/kratos_env/bin/python"
 
 def run_sims(X, params) -> np.array:
