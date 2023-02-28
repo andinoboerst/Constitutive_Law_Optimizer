@@ -71,6 +71,7 @@ def launch_sim_local(end_time):
                 #sim_bar.update(curr_time/end_time)
         status = process.wait()
         #sim_bar.finish()
+        print("\n")
     except subprocess.CalledProcessError as e:
         print(e.output)
     if status != 0:
