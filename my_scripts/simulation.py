@@ -38,6 +38,9 @@ def run_sims(X, params) -> np.array:
         # Run the simulation with the given parameters
         print(f"Running simulation {index+1}/{len(X)}")
 
+        if os.path.isdir(f"{PATH}/vtk_output"):
+            shutil.rmtree(f"{PATH}/vtk_output")
+
         # launch the simulations and extract the results
         if LAUNCH_ON_SERVER:
             res.append(launch_sim_server())
