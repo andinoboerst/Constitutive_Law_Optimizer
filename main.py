@@ -49,7 +49,7 @@ def validate_model(to_predict: list[list[float]]) -> float:
 
     params_predicted = model.predict(to_predict)
 
-    results_predicted = sm.run_sims(params_predicted)
+    results_predicted = sm.run_sims(params_predicted, model.data.params)
 
     acc = np.sqrt(((to_predict-results_predicted)**2).sum(axis=1)).sum()/len(results_predicted)
 
