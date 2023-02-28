@@ -11,7 +11,7 @@ This is a project to define the optimal material parameters to obtain the desire
 
 ## Example Simulation: Granular Flow Simulation
 
-This example was done using the Particle Mechanics Application of the @KratosMultiphysics framework to simulate granular flow. The result of the simulation is quantified by measuring the y_coordinate of the slope at specific points. The example can be seen in the figure below.
+This example was done using the Particle Mechanics Application of the [@KratosMultiphysics](https://github.com/KratosMultiphysics/Kratos) framework to simulate granular flow. The result of the simulation is quantified by measuring the y_coordinate of the slope at specific points. The example can be seen in the figure below.
 
 Start:
 ![start](https://user-images.githubusercontent.com/73847250/221851535-5129ef9d-af96-4a77-95cc-8b528300bb06.png)
