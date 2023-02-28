@@ -3,6 +3,8 @@ Author: Andino Boerst
 """
 import my_scripts.data as dt
 import my_scripts.ml_model as ml
+import my_scripts.simulation as sm
+import numpy as np
 
 PARAMS = [{"id": 1, "name": "DENSITY", "lower": 2200, "upper": 2400},
           {"id": 2, "name": "YOUNG_MODULUS", "lower": 5500000, "upper": 6500000},
@@ -36,6 +38,23 @@ def continue_sims() -> ml.ML_model:
 
     model = ml.ML_model(data, "knn regressor", restart=False)
     return model
+
+def validate_model(to_predict: list[list[float]]) -> float:
+    '''
+    Predicts the parameters to be used for a certain result, which is then simulated and compared with the actual results
+    Returns the accuracy of the model as an average of all the simulations that were compared
+    '''
+    to_predict = np.array(to_predict)
+    model = load_model()
+
+    params_predicted = model.predict(to_predict)
+
+    results_predicted = sm.run_sims(params_predicted)
+
+    acc = np.sqrt(((to_predict-results_predicted)**2).sum(axis=1)).sum()/len(results_predicted)
+
+    return acc
+
 
 def main():
     model = start_new()
