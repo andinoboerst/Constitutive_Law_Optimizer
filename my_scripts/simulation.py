@@ -18,7 +18,7 @@ PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/my_files
 P_REGEX = re.compile('TIME:  (\d+.\d+|\d+e[+-]?\d+)')
 PYTHON_PATH = "/home/andinoboerst/anaconda3/envs/kratos_env/bin/python"
 
-def run_sims(X, params) -> np.array:
+def run_sims(X: np.array([[]]), params: list[dict]) -> np.array:
 
     with open(f"{PATH}/ProjectParameters.json", 'r') as f:
         end_time = json.load(f)["problem_data"]["end_time"]
@@ -43,21 +43,26 @@ def run_sims(X, params) -> np.array:
 
         # launch the simulations and extract the results
         if LAUNCH_ON_SERVER:
-            res.append(launch_sim_server())
+            launch_sim_server()
         else:
             res.append(launch_sim_local(end_time))
 
-        with open(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json", 'w') as f:
-            json_dict = {"results": res}
-            json.dump(json_dict, f, indent=4)
+            with open(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json", 'w') as f:
+                json_dict = {"results": res}
+                json.dump(json_dict, f, indent=4)
 
-        shutil.rmtree(f"{PATH}/vtk_output")
+            shutil.rmtree(f"{PATH}/vtk_output")
 
-    os.remove(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json")
+    if LAUNCH_ON_SERVER:
+        res = extract_results_server()
+
+    if os.path.isfile(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json"):
+        os.remove(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json")
+        
     return np.array(res)
 
 
-def launch_sim_local(end_time):
+def launch_sim_local(end_time: float) -> list[float]:
     try:
         #sim_bar = progressbar.ProgressBar(maxval=1.00001)
         #sim_bar.start()
@@ -111,8 +116,11 @@ def extract_results_local() -> list[float]:
     return y_max
 
 
-def launch_sim_server():
-    return []
+def launch_sim_server() -> None:
+    return
+
+def extract_results_server() -> list[list[float]]:
+    return [[]]
 
 
 if __name__=="__main__":
