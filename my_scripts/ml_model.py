@@ -6,10 +6,11 @@ import pickle
 import warnings
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 import os
 import my_scripts.simulation as sm
 
-MODEL_OPTIONS = {"linear regression": LinearRegression, "knn regressor": KNeighborsRegressor}
+MODEL_OPTIONS = {"linear regression": LinearRegression, "knn regressor": KNeighborsRegressor, "gradient boosting": GradientBoostingRegressor(random_state=0)}
 
 PATH = f"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/save_restart"
 
