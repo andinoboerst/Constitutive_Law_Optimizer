@@ -58,7 +58,7 @@ def run_sims(X: np.array([[]]), params: list[dict]) -> np.array:
 
     if os.path.isfile(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json"):
         os.remove(f"{os.path.dirname(PATH)}/save_restart/current_sim_results.json")
-        
+
     return np.array(res)
 
 
@@ -86,8 +86,8 @@ def launch_sim_local(end_time: float) -> list[float]:
 
     return extract_results_local() # return the extracted results
 
-def extract_results_local() -> list[float]:
-    results_folder = PATH + "/vtk_output"
+# the results_folder variable is used for calling this function when launching on the server if the results are saved somewhere else
+def extract_results_local(results_folder: str = f"{PATH}/vtk_output") -> list[float]:
     files = os.listdir(results_folder)
     p = re.compile('^MPM_Material(\d+).*\.vtu$')
     mat_files = [p.search(f) for f in files]
@@ -120,6 +120,7 @@ def launch_sim_server() -> None:
     return
 
 def extract_results_server() -> list[list[float]]:
+    # wait for results, by checking if output file was written or some other way and then call export_results_local for that result
     return [[]]
 
 
